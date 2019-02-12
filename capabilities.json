@@ -1,0 +1,143 @@
+{
+    "dataRoles": [
+        {
+            "displayName": "KPI Name",
+            "name": "category",
+            "kind": "GroupingOrMeasure"
+        },
+        {
+            "displayName": "Actual value",
+            "name": "actualValue",
+            "kind": "Measure"
+        },
+        {
+            "displayName": "Previous value",
+            "name": "previousValue",
+            "kind": "Measure"
+        },
+        {
+            "displayName": "Info text",
+            "name": "infoText",
+            "kind": "Measure"
+        },
+        {
+            "displayName": "Crisis text",
+            "name": "crisisText",
+            "kind": "Measure"
+        }
+    ],
+    "objects": {
+        "dataPoint": {
+            "displayName": "Data colors",
+            "properties": {
+                "defaultColor": {
+                    "displayName": "Default color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "showAllDataPoints": {
+                    "displayName": "Show all",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "fill": {
+                    "displayName": "Fill",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "fillRule": {
+                    "displayName": "Color saturation",
+                    "type": {
+                        "fill": {}
+                    }
+                },
+                "fontSize": {
+                    "displayName": "Text Size",
+                    "type": {
+                        "formatting": {
+                            "fontSize": true
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "dataViewMappings": [
+        {
+            "conditions": [
+                {
+                    "category": {
+                        "max": 1
+                    }
+                },
+                {
+                    "actualValue": {
+                        "max": 1
+                    }
+                },
+                {
+                    "previousValue": {
+                        "max": 1
+                    }
+                },
+                {
+                    "infoText": {
+                        "max": 1
+                    }
+                },
+                {
+                    "crisisText": {
+                        "max": 1
+                    }
+                }
+            ],
+            "categorical": {
+                "categories": {
+                    "for": {
+                        "in": "category"
+                    },
+                    "dataReductionAlgorithm": {
+                        "top": {
+                            "count": 1000
+                        }
+                    }
+                },
+                "values": {
+                    "select": [
+                        {
+                            "bind": {
+                                "to": "actualValue"
+                            }
+                        },
+                        {
+                            "bind": {
+                                "to": "previousValue"
+                            }
+                        },
+                        {
+                            "bind": {
+                                "to": "crisisText"
+                            }
+                        },
+                        {
+                            "bind": {
+                                "to": "infoText"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}
