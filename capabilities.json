@@ -27,11 +27,34 @@
         }
     ],
     "objects": {
-        "dataPoint": {
-            "displayName": "Data colors",
+        "kpiTitle": {
+            "displayName": "KPI Title",
+            "properties": {
+                "kpiLabelFontSize": {
+                    "displayName": "Label font size",
+                    "type": {
+                        "formatting": {
+                            "fontSize": true
+                        }
+                    }
+                },
+                "kpiDefaultColor": {
+                    "displayName": "Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        ,"dataLabel": {
+            "displayName": "Actual value",
             "properties": {
                 "defaultColor": {
-                    "displayName": "Default color",
+                    "displayName": "Color",
                     "type": {
                         "fill": {
                             "solid": {
@@ -40,14 +63,52 @@
                         }
                     }
                 },
-                "showAllDataPoints": {
-                    "displayName": "Show all",
+                "actualValueFontSize": {
+                    "displayName": "Text size",
                     "type": {
-                        "bool": true
+                        "formatting": {
+                            "fontSize": true
+                        }
                     }
                 },
-                "fill": {
-                    "displayName": "Fill",
+                "dataType": {
+                    "displayName": "Data type",
+                    "type": {
+                        "enumeration": [
+                            {
+                                "value": "percent",
+                                "displayName": "Percents"
+                            },
+                            {
+                                "value": "whole",
+                                "displayName": "Whole number"
+                            },
+                            {
+                                "value": "decimal",
+                                "displayName": "Decimal"
+                            }
+                        ]
+                    }
+                },
+                "precision":{
+                    "displayName": "Decimal places",
+                    "type": {
+                        "numeric": true
+                    }
+                }
+            }
+        },
+        "previousValues": {
+            "displayName": "Previous value",
+            "properties": {
+                "prefixType": {
+                    "displayName": "Prefix type",
+                    "type": {
+                        "text": true
+                    }
+                },
+                "previousValueColor": {
+                    "displayName": "Color",
                     "type": {
                         "fill": {
                             "solid": {
@@ -56,14 +117,49 @@
                         }
                     }
                 },
-                "fillRule": {
-                    "displayName": "Color saturation",
+                "previousValueFontSize": {
+                    "displayName": "Text size",
                     "type": {
-                        "fill": {}
+                        "formatting": {
+                            "fontSize": true
+                        }
+                    }
+                }
+            }
+        },
+        "textValues": {
+            "displayName": "Texts",
+            "properties": {
+                "crisisTextColor": {
+                    "displayName": "Crisis color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
                     }
                 },
-                "fontSize": {
-                    "displayName": "Text Size",
+                "crisisTextFontSize": {
+                    "displayName": "Crisis text size",
+                    "type": {
+                        "formatting": {
+                            "fontSize": true
+                        }
+                    }
+                },
+                "infoTextColor": {
+                    "displayName": "Info color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "infoTextFontSize": {
+                    "displayName": "Info text size",
                     "type": {
                         "formatting": {
                             "fontSize": true
@@ -78,27 +174,37 @@
             "conditions": [
                 {
                     "category": {
-                        "max": 1
+                        "max": 1,
+                        "min": 1,
+                        "kind": "Grouping"
                     }
                 },
                 {
                     "actualValue": {
-                        "max": 1
+                        "max": 1,
+                        "min": 1,
+                        "kind": "Measure"
                     }
                 },
                 {
                     "previousValue": {
-                        "max": 1
+                        "max": 1,
+                        "min": 1,
+                        "kind": "Measure"
                     }
                 },
                 {
                     "infoText": {
-                        "max": 1
+                        "max": 1,
+                        "min": 1,
+                        "kind": "Measure"
                     }
                 },
                 {
                     "crisisText": {
-                        "max": 1
+                        "max": 1,
+                        "min": 1,
+                        "kind": "Measure"
                     }
                 }
             ],

@@ -28,21 +28,36 @@ module powerbi.extensibility.visual {
     "use strict";
     import DataViewObjectsParser = powerbi.extensibility.utils.dataview.DataViewObjectsParser;
 
-    export class VisualSettings extends DataViewObjectsParser {
-      public dataPoint: dataPointSettings = new dataPointSettings();
-      }
-
-    export class dataPointSettings {
-     // Default color
-      public defaultColor: string = "";
-     // Show all
-      public showAllDataPoints: boolean = true;
-     // Fill
-      public fill: string = "";
-     // Color saturation
-      public fillRule: string = "";
-     // Text Size
-      public fontSize: number = 12;
+     export class KpiSettings {
+         
+         public defaultColor: string = "black";
+         public actualValueFontSize: number = 50;
+         public dataType: string = "whole";
+         public precision: number = 2;
      }
+      export class TextSettings {
+        public crisisTextColor: string = "red";
+        public crisisTextFontSize: number = 35;
+        public infoTextColor: string = "black";
+        public infoTextFontSize: number = 20;
+
+      }
+      export class KpiLabelSettings {
+        public kpiLabelFontSize: number = 25;
+        public kpiDefaultColor: string = "black"
+      }
+      export class PreviousValuesSettings {
+        public previousValueColor: string = "black";
+        public previousValueFontSize: number = 20;
+        public prefixType: string = "Včera:"
+      }
+     export class VisualSettings extends DataViewObjectsParser {
+         public dataLabel: KpiSettings = new KpiSettings();
+         public kpiTitle: KpiLabelSettings = new KpiLabelSettings();
+         public previousValues: PreviousValuesSettings = new PreviousValuesSettings();
+         public textValues: TextSettings = new TextSettings();
+
+     }
+
 
 }

@@ -29,8 +29,8 @@ module powerbi.extensibility.visual {
 
     interface DataPoint {
         category: string;
-        actualValue: string;
-        previousValue: string;
+        actualValue: number;
+        previousValue: number;
         textInfo: string;
         crisisInfo: string;
     }
@@ -39,17 +39,20 @@ module powerbi.extensibility.visual {
         maxValue: number;
     }
 
+    import ISelectionID = powerbi.visuals.ISelectionId;
+
     export class Visual implements IVisual {
         private host: IVisualHost;
         private svg: d3.Selection<SVGElement>;
         private container: d3.Selection<SVGElement>;
         private category: d3.Selection<SVGElement>;
-        private circle: d3.Selection<SVGElement>;
         private actualValueText: d3.Selection<SVGElement>;
         private previousValueText: d3.Selection<SVGElement>;
         private kpiLabel: d3.Selection<SVGElement>;
         private infoTextText: d3.Selection<SVGElement>;
         private crisisTextText: d3.Selection<SVGElement>;
+        private visualSettings: VisualSettings;
+
 
         constructor(options: VisualConstructorOptions) {
             this.svg = d3.select(options.element)
@@ -59,8 +62,6 @@ module powerbi.extensibility.visual {
                 .classed('container', true);
             this.category = this.svg.append("g")
                 .classed('category', true);
-            this.circle = this.container.append("circle")
-                .classed('circle', true);
             this.actualValueText = this.container.append("text")
                 .classed("actualValueText", true);
             this.previousValueText = this.container.append("text")
@@ -68,17 +69,24 @@ module powerbi.extensibility.visual {
             this.kpiLabel = this.container.append("text")
                 .classed("kbiLabel", true);
             this.infoTextText = this.container.append("text")
-                .classed("infoTextText",true);
+                .classed("infoTextText", true);
             this.crisisTextText = this.container.append("text")
                 .classed("crisisTextText", true);
+        }
+        public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstanceEnumeration {
+            const settings: VisualSettings = this.visualSettings ||
+                VisualSettings.getDefault() as VisualSettings;
+            return VisualSettings.enumerateObjectInstances(settings, options);
         }
 
         public update(options: VisualUpdateOptions) {
             let dataView: DataView = options.dataViews[0];
             let width: number = options.viewport.width;
             let height: number = options.viewport.height;
-
+            this.visualSettings = VisualSettings.parse<VisualSettings>(dataView);
             let viewModel = this.getViewModel(options);
+            this.visualSettings.dataLabel.precision = Math.min(8,this.visualSettings.dataLabel.precision);
+
             //console.log(viewModel);
             this.svg.attr({
                 width: width,
@@ -86,49 +94,52 @@ module powerbi.extensibility.visual {
             });
             let radius: number = Math.min(width, height) / 2.2;
             let fontSizeValue: number = Math.min(width, height) / 5;
+            let textValue: string = this.getFormatting(viewModel.dataPoints[0].actualValue, this.visualSettings.dataLabel.dataType, this.visualSettings.dataLabel.precision);
+            //console.log(textValue);
             this.actualValueText
-                .text(viewModel.dataPoints[0].actualValue)
+                .text(textValue)
                 .attr({
                     x: "50%",
-                    y: "20%",
+                    y: "35%",
                     dy: "0.35em",
                     "text-anchor": "middle"
-                }).style("font-size", fontSizeValue + "px");
+                }).style("font-size", this.visualSettings.dataLabel.actualValueFontSize + "px").style("font-weight", "bold").style("fill", this.visualSettings.dataLabel.defaultColor);
+
             this.previousValueText
-                .text(viewModel.dataPoints[0].previousValue)
+                .text(this.visualSettings.previousValues.prefixType + " " + this.getFormatting(viewModel.dataPoints[0].previousValue, this.visualSettings.dataLabel.dataType))
                 .attr({
                     x: "50%",
-                    y: "40%",
+                    y: "56%",
                     dy: "0.35em",
                     "text-anchor": "middle"
-                }).style("font-size", fontSizeValue + "px");
-                this.infoTextText
+                }).style("font-size", this.visualSettings.previousValues.previousValueFontSize + "px").style("fill", this.visualSettings.previousValues.previousValueColor);
+            this.infoTextText
                 .text(viewModel.dataPoints[0].textInfo)
                 .attr({
                     x: "50%",
-                    y: "60%",
+                    y: "70%",
                     dy: "0.35em",
                     "text-anchor": "middle",
                     color: "FF0000"
-                }).style("font-size", fontSizeValue + "px");
-                this.crisisTextText
+                }).style("font-size", this.visualSettings.textValues.infoTextFontSize + "px").style("fill", this.visualSettings.textValues.infoTextColor);
+            this.crisisTextText
                 .text(viewModel.dataPoints[0].crisisInfo)
                 .attr({
                     x: "50%",
-                    y: "80%",
+                    y: "90%",
                     dy: "0.35em",
                     "text-anchor": "middle"
-                }).style("font-size", fontSizeValue + "px");
+                }).style("font-size", this.visualSettings.textValues.crisisTextFontSize + "px").style("fill", this.visualSettings.textValues.crisisTextColor).style("font-weight", "bold");
             //let fontSizeLabel: number = fontSizeValue / 4;
             this.kpiLabel
                 .text(viewModel.dataPoints[0].category)
                 .attr({
                     x: "50%",
-                    y: "10%" ,
+                    y: "6%",
                     dy: "0.35em",
                     "text-anchor": "middle"
                 })
-                .style("font-size", fontSizeValue + "px");
+                .style("font-size", this.visualSettings.kpiTitle.kpiLabelFontSize + "px").style("font-weight", "bold").style("fill", this.visualSettings.kpiTitle.kpiDefaultColor);
         }
         private getViewModel(options: VisualUpdateOptions): ViewModel {
             let dv = options.dataViews;
@@ -155,8 +166,8 @@ module powerbi.extensibility.visual {
                 viewModel.dataPoints.push(
                     {
                         category: <string>categories.values[i],
-                        actualValue: <string>actualvalues.values[i],
-                        previousValue: <string>previousvalues.values[i],
+                        actualValue: <number>actualvalues.values[i],
+                        previousValue: <number>previousvalues.values[i],
                         textInfo: <string>infoTexts.values[i],
                         crisisInfo: <string>crisisTexts.values[i]
 
@@ -166,6 +177,30 @@ module powerbi.extensibility.visual {
             viewModel.maxValue = 0
             return viewModel;
         };
+        private getFormatting(a: number, type: string, precision?: number): string {
+            let ret: string;
+
+            switch (type) {
+                case 'percent':
+                    if (!precision) {
+                        precision = String(a).replace('.', '').length - a.toFixed().length - 2;
+                    }
+                    ret = (a * 100).toFixed(precision) + " %"
+                    break;
+                case 'whole':
+                    ret = Math.round(a).toString();
+                    break;
+                default:
+                    if (!precision) {
+                        precision = String(a).replace('.', '').length - a.toFixed().length;
+                    }
+                    ret = a.toFixed(precision);
+                    break;
+            }
+
+            return ret;
+
+        }
 
     }
 }
