@@ -1,0 +1,249 @@
+{
+    "dataRoles": [
+        {
+            "displayName": "KPI Name",
+            "name": "category",
+            "kind": "GroupingOrMeasure"
+        },
+        {
+            "displayName": "Actual value",
+            "name": "actualValue",
+            "kind": "Measure"
+        },
+        {
+            "displayName": "Previous value",
+            "name": "previousValue",
+            "kind": "Measure"
+        },
+        {
+            "displayName": "Info text",
+            "name": "infoText",
+            "kind": "Measure"
+        },
+        {
+            "displayName": "Crisis text",
+            "name": "crisisText",
+            "kind": "Measure"
+        }
+    ],
+    "objects": {
+        "kpiTitle": {
+            "displayName": "KPI Title",
+            "properties": {
+                "kpiLabelFontSize": {
+                    "displayName": "Label font size",
+                    "type": {
+                        "formatting": {
+                            "fontSize": true
+                        }
+                    }
+                },
+                "kpiDefaultColor": {
+                    "displayName": "Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        ,"dataLabel": {
+            "displayName": "Actual value",
+            "properties": {
+                "defaultColor": {
+                    "displayName": "Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "actualValueFontSize": {
+                    "displayName": "Text size",
+                    "type": {
+                        "formatting": {
+                            "fontSize": true
+                        }
+                    }
+                },
+                "dataType": {
+                    "displayName": "Data type",
+                    "type": {
+                        "enumeration": [
+                            {
+                                "value": "percent",
+                                "displayName": "Percents"
+                            },
+                            {
+                                "value": "whole",
+                                "displayName": "Whole number"
+                            },
+                            {
+                                "value": "decimal",
+                                "displayName": "Decimal"
+                            }
+                        ]
+                    }
+                },
+                "precision":{
+                    "displayName": "Decimal places",
+                    "type": {
+                        "numeric": true
+                    }
+                }
+            }
+        },
+        "previousValues": {
+            "displayName": "Previous value",
+            "properties": {
+                "prefixType": {
+                    "displayName": "Prefix type",
+                    "type": {
+                        "text": true
+                    }
+                },
+                "previousValueColor": {
+                    "displayName": "Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "previousValueFontSize": {
+                    "displayName": "Text size",
+                    "type": {
+                        "formatting": {
+                            "fontSize": true
+                        }
+                    }
+                }
+            }
+        },
+        "textValues": {
+            "displayName": "Texts",
+            "properties": {
+                "crisisTextColor": {
+                    "displayName": "Crisis color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "crisisTextFontSize": {
+                    "displayName": "Crisis text size",
+                    "type": {
+                        "formatting": {
+                            "fontSize": true
+                        }
+                    }
+                },
+                "infoTextColor": {
+                    "displayName": "Info color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "infoTextFontSize": {
+                    "displayName": "Info text size",
+                    "type": {
+                        "formatting": {
+                            "fontSize": true
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "dataViewMappings": [
+        {
+            "conditions": [
+                {
+                    "category": {
+                        "max": 1,
+                        "min": 1,
+                        "kind": "Grouping"
+                    }
+                },
+                {
+                    "actualValue": {
+                        "max": 1,
+                        "min": 1,
+                        "kind": "Measure"
+                    }
+                },
+                {
+                    "previousValue": {
+                        "max": 1,
+                        "min": 1,
+                        "kind": "Measure"
+                    }
+                },
+                {
+                    "infoText": {
+                        "max": 1,
+                        "min": 1,
+                        "kind": "Measure"
+                    }
+                },
+                {
+                    "crisisText": {
+                        "max": 1,
+                        "min": 1,
+                        "kind": "Measure"
+                    }
+                }
+            ],
+            "categorical": {
+                "categories": {
+                    "for": {
+                        "in": "category"
+                    },
+                    "dataReductionAlgorithm": {
+                        "top": {
+                            "count": 1000
+                        }
+                    }
+                },
+                "values": {
+                    "select": [
+                        {
+                            "bind": {
+                                "to": "actualValue"
+                            }
+                        },
+                        {
+                            "bind": {
+                                "to": "previousValue"
+                            }
+                        },
+                        {
+                            "bind": {
+                                "to": "crisisText"
+                            }
+                        },
+                        {
+                            "bind": {
+                                "to": "infoText"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}

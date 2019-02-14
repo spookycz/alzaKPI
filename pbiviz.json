@@ -1,0 +1,28 @@
+{
+  "visual": {
+    "name": "alzaKPI",
+    "displayName": "Alza KPI",
+    "guid": "alzaKPIB4B1B6D1E62543DCB1B68B5EC8979367",
+    "visualClassName": "Visual",
+    "version": "1.0.0",
+    "description": "",
+    "supportUrl": "",
+    "gitHubUrl": ""
+  },
+  "apiVersion": "2.3.0",
+  "author": {
+    "name": "Jiří Prokeš",
+    "email": "jiri.prokes@alza.cz"
+  },
+  "assets": {
+    "icon": "assets/icon.png"
+  },
+  "externalJS": [
+    "node_modules/powerbi-visuals-utils-dataviewutils/lib/index.js",
+    "node_modules/d3/d3.min.js"
+  ],
+  "style": "style/visual.less",
+  "capabilities": "capabilities.json",
+  "dependencies": "dependencies.json",
+  "stringResources": []
+}
