@@ -87,7 +87,7 @@ module powerbi.extensibility.visual {
             let viewModel = this.getViewModel(options);
             this.visualSettings.dataLabel.precision = Math.min(8,this.visualSettings.dataLabel.precision);
 
-            console.log(viewModel);
+            //console.log(viewModel);
             this.svg.attr({
                 width: width,
                 height: height
