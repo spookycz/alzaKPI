@@ -92,8 +92,6 @@ module powerbi.extensibility.visual {
                 width: width,
                 height: height
             });
-            let radius: number = Math.min(width, height) / 2.2;
-            let fontSizeValue: number = Math.min(width, height) / 5;
             let textValue: string = this.getFormatting(viewModel.dataPoints[0].actualValue, this.visualSettings.dataLabel.dataType, this.visualSettings.dataLabel.precision);
             //console.log(textValue);
             this.actualValueText
@@ -106,7 +104,7 @@ module powerbi.extensibility.visual {
                 }).style("font-size", this.visualSettings.dataLabel.actualValueFontSize + "px").style("font-weight", "bold").style("fill", this.visualSettings.dataLabel.defaultColor);
 
             this.previousValueText
-                .text(this.visualSettings.previousValues.prefixType + " " + this.getFormatting(viewModel.dataPoints[0].previousValue, this.visualSettings.dataLabel.dataType))
+                .text(this.visualSettings.previousValues.prefixType + " " + this.getFormatting(viewModel.dataPoints[0].previousValue, this.visualSettings.dataLabel.dataType,this.visualSettings.dataLabel.precision))
                 .attr({
                     x: "50%",
                     y: "56%",
