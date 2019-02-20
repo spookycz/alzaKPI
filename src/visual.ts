@@ -92,7 +92,11 @@ module powerbi.extensibility.visual {
                 width: width,
                 height: height
             });
-            let textValue: string = this.getFormatting(viewModel.dataPoints[0].actualValue, this.visualSettings.dataLabel.dataType, this.visualSettings.dataLabel.precision);
+            let suffix: string  = this.visualSettings.dataLabel.suffixValue;
+            if (!suffix || !(suffix == "")){
+                suffix = " " + suffix
+            }
+            let textValue: string = this.getFormatting(viewModel.dataPoints[0].actualValue, this.visualSettings.dataLabel.dataType, this.visualSettings.dataLabel.precision) + suffix;
             //console.log(textValue);
             this.actualValueText
                 .text(textValue)
@@ -102,9 +106,12 @@ module powerbi.extensibility.visual {
                     dy: "0.35em",
                     "text-anchor": "middle"
                 }).style("font-size", this.visualSettings.dataLabel.actualValueFontSize + "px").style("font-weight", "bold").style("fill", this.visualSettings.dataLabel.defaultColor);
+            
+            
+
 
             this.previousValueText
-                .text(this.visualSettings.previousValues.prefixType + " " + this.getFormatting(viewModel.dataPoints[0].previousValue, this.visualSettings.dataLabel.dataType,this.visualSettings.dataLabel.precision))
+                .text(this.visualSettings.previousValues.prefixType + " " + this.getFormatting(viewModel.dataPoints[0].previousValue, this.visualSettings.dataLabel.dataType,this.visualSettings.dataLabel.precision) + suffix)
                 .attr({
                     x: "50%",
                     y: "56%",
@@ -199,6 +206,7 @@ module powerbi.extensibility.visual {
             return ret;
 
         }
+        
 
     }
 }

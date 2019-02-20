@@ -95,6 +95,12 @@
                     "type": {
                         "numeric": true
                     }
+                },
+                "suffixValue": {
+                    "displayName": "Suffix/Unit",
+                    "type": {
+                        "text": true
+                    }
                 }
             }
         },

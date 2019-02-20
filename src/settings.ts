@@ -34,6 +34,7 @@ module powerbi.extensibility.visual {
          public actualValueFontSize: number = 50;
          public dataType: string = "whole";
          public precision: number = 2;
+         public suffixValue: string = "";
      }
       export class TextSettings {
         public crisisTextColor: string = "red";
