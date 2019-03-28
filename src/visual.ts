@@ -40,6 +40,8 @@ module powerbi.extensibility.visual {
     }
 
     import ISelectionID = powerbi.visuals.ISelectionId;
+    import ValueFormatter = powerbi.extensibility.utils.formatting.valueFormatter;
+    import IValueFormatter = powerbi.extensibility.utils.formatting.IValueFormatter;
 
     export class Visual implements IVisual {
         private host: IVisualHost;
@@ -55,6 +57,7 @@ module powerbi.extensibility.visual {
 
 
         constructor(options: VisualConstructorOptions) {
+            this.host = options.host;
             this.svg = d3.select(options.element)
                 .append('svg')
                 .classed('circleCard', true);
@@ -85,17 +88,18 @@ module powerbi.extensibility.visual {
             let height: number = options.viewport.height;
             this.visualSettings = VisualSettings.parse<VisualSettings>(dataView);
             let viewModel = this.getViewModel(options);
-            this.visualSettings.dataLabel.precision = Math.min(8,this.visualSettings.dataLabel.precision);
+            this.visualSettings.dataLabel.precision = Math.min(8, this.visualSettings.dataLabel.precision);
 
-            //console.log(viewModel);
             this.svg.attr({
                 width: width,
                 height: height
             });
-            let suffix: string  = this.visualSettings.dataLabel.suffixValue;
-            if (!suffix || !(suffix == "")){
+            let suffix: string = this.visualSettings.dataLabel.suffixValue;
+            if (!suffix || !(suffix == "")) {
                 suffix = " " + suffix
             }
+            //let textValue: string = valueFormatter.format(viewModel.dataPoints[0].actualValue);
+            //let textValue: string = viewModel.dataPoints[0].actualValue.toString();
             let textValue: string = this.getFormatting(viewModel.dataPoints[0].actualValue, this.visualSettings.dataLabel.dataType, this.visualSettings.dataLabel.precision) + suffix;
             //console.log(textValue);
             this.actualValueText
@@ -106,15 +110,15 @@ module powerbi.extensibility.visual {
                     dy: "0.35em",
                     "text-anchor": "middle"
                 }).style("font-size", this.visualSettings.dataLabel.actualValueFontSize + "px").style("font-weight", "bold").style("fill", this.visualSettings.dataLabel.defaultColor);
-            
-            
+
+
 
 
             this.previousValueText
-                .text(this.visualSettings.previousValues.prefixType + " " + this.getFormatting(viewModel.dataPoints[0].previousValue, this.visualSettings.dataLabel.dataType,this.visualSettings.dataLabel.precision) + suffix)
+                .text(this.visualSettings.previousValues.prefixType + " " + this.getFormatting(viewModel.dataPoints[0].previousValue, this.visualSettings.dataLabel.dataType, this.visualSettings.dataLabel.precision) + suffix)
                 .attr({
                     x: "50%",
-                    y: "56%",
+                    y: "90%",
                     dy: "0.35em",
                     "text-anchor": "middle"
                 }).style("font-size", this.visualSettings.previousValues.previousValueFontSize + "px").style("fill", this.visualSettings.previousValues.previousValueColor);
@@ -122,7 +126,7 @@ module powerbi.extensibility.visual {
                 .text(viewModel.dataPoints[0].textInfo)
                 .attr({
                     x: "50%",
-                    y: "70%",
+                    y: "76%",
                     dy: "0.35em",
                     "text-anchor": "middle",
                     color: "FF0000"
@@ -131,7 +135,7 @@ module powerbi.extensibility.visual {
                 .text(viewModel.dataPoints[0].crisisInfo)
                 .attr({
                     x: "50%",
-                    y: "90%",
+                    y: "60%",
                     dy: "0.35em",
                     "text-anchor": "middle"
                 }).style("font-size", this.visualSettings.textValues.crisisTextFontSize + "px").style("fill", this.visualSettings.textValues.crisisTextColor).style("font-weight", "bold");
@@ -140,7 +144,7 @@ module powerbi.extensibility.visual {
                 .text(viewModel.dataPoints[0].category)
                 .attr({
                     x: "50%",
-                    y: "6%",
+                    y: "8%",
                     dy: "0.35em",
                     "text-anchor": "middle"
                 })
@@ -182,31 +186,39 @@ module powerbi.extensibility.visual {
             viewModel.maxValue = 0
             return viewModel;
         };
-        private getFormatting(a: number, type: string, precision?: number): string {
+        private getFormatting(a: number, type: string, prec?: number): string {
             let ret: string;
 
+
+
+            //let iValueFormatterCZ = valueFormatter.create({ format: ""});
+            //console.log(iValueFormatterCZ.format(0.42));
+            //console.log(viewModel);
             switch (type) {
                 case 'percent':
-                    if (!precision) {
-                        precision = String(a).replace('.', '').length - a.toFixed().length - 2;
+                    if (!prec) {
+                        prec = String(a).replace('.', '').length - a.toFixed().length - 2;
                     }
-                    ret = (a * 100).toFixed(precision) + " %"
+                    let valueFormatterPerc: IValueFormatter = ValueFormatter.create({ value: 0, format: "#,0 %", cultureSelector: "cs-CZ", precision: prec });
+                    ret = valueFormatterPerc.format(a);
                     break;
                 case 'whole':
-                    ret = Math.round(a).toString();
+                    let valueFormatterWhole: IValueFormatter = ValueFormatter.create({ format: "### ##0", cultureSelector: "cs-CZ" });
+                    ret = valueFormatterWhole.format(a);
                     break;
                 default:
-                    if (!precision) {
-                        precision = String(a).replace('.', '').length - a.toFixed().length;
+                    if (!prec) {
+                        prec = String(a).replace('.', '').length - a.toFixed().length;
                     }
-                    ret = a.toFixed(precision);
+                    let valueFormatterDec: IValueFormatter = ValueFormatter.create({ value: 0, cultureSelector: "cs-CZ", precision: prec });
+                    ret = valueFormatterDec.format(a);
                     break;
             }
 
             return ret;
 
         }
-        
+
 
     }
 }
